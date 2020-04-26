@@ -54,7 +54,12 @@ Rplots.pdf
 web/*
 results/*.csv
 
-
+## experiments
+exp/
+results/*.pkl
+results/stdout.txt
+results/stderr.txt
+*.pkl
 
 # Python
 # Byte-compiled / optimized / DLL files
@@ -187,3 +192,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .vscode
+
+*.swp

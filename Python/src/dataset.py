@@ -5,7 +5,9 @@ from src.util import poly, dt_to_dec
 from scipy.stats import gamma as gamma_scipy
 from numpy.random import gamma as gamma_np
 from statsmodels.distributions.empirical_distribution import ECDF
+import logging
 
+log = logging.getLogger('Covid19Model')
 
 class HierarchicalDataset:
     """Base Dataset class containing attributes relating to the datasets used for the modelling and methods
@@ -37,7 +39,7 @@ class HierarchicalDataset:
 
     def __init__(
         self,
-        config_dir="../../data/catalog.yml",
+        config_dir="../../config/catalog.yml",
         cases_dir="../../data/COVID-19-up-to-date.csv",
         ifr_dir="../../data/weighted_fatality.csv",
         serial_interval_dir="../../data/serial_interval.csv",
