@@ -67,18 +67,25 @@ def main(args):
     # del from stan_data because model doesn't like text
     del stan_data['regions']
     
+    stan_args = {
+        "data": stan_data,
+        "seed": args.seed,
+        "chains":args.chains,
+        "n_jobs":args.njobs,
+        "control": {"adapt_delta": 0.95, "max_treedepth": 10},
+    }
 
     if args.full:
         log.info("Run model {} with data".format(args.stanmodel))
-        fit = sm.sampling(data=stan_data,iter=args.iter,warmup=args.warmup,chains=args.chains,
-            control = {"adapt_delta": 0.95, "max_treedepth": 10},
-            n_jobs=args.njobs, 
+        fit = sm.sampling(
+            iter=args.iter,warmup=args.warmup,
+            **stan_args
         )
     else:
         log.info("DEBUG MODE : Run model {} with data limiting to 40 iters".format(args.stanmodel))
-        fit = sm.sampling(data=stan_data, iter=40, warmup=20, chains=args.chains,
-            control = {"adapt_delta": 0.95, "max_treedepth": 10},
-            n_jobs=args.njobs, 
+        fit = sm.sampling(
+            iter=40,warmup=20,
+            **stan_args
         )
 
     with open(os.path.join(exp_dir, "output", "model.pkl"), "wb") as fd:

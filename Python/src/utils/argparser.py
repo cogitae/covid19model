@@ -1,5 +1,8 @@
 import argparse
 import os
+import random
+import sys
+import numpy as np
 from datetime import datetime  
 from pathlib import Path
 
@@ -79,6 +82,9 @@ def parse_args():
         default=2000,
 	    help="Warmup for STAN fit method.")
 
+    parser.add_argument("--seed", type=int, 
+        default=random.randint(0, sys.maxsize),
+	    help="Seed for STAN fit method.")
 
     parser.add_argument("--only-dump-input", action="store_true")
     
