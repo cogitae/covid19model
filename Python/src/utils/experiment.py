@@ -42,10 +42,12 @@ def save_input(args, stan_data, exp_dir):
         with open(os.path.join(exp_dir, "input", "model_input.pkl"), "wb") as fd:
             pickle.dump(stan_data, fd)
 
-def save_output(args, exp_dir, output_dict):
+def save_output(args, exp_dir, output_dict, zones):
     for k, v in output_dict.items():
         with open(os.path.join(exp_dir, "results", "{}.pkl".format(k)), "wb") as fd:
             pickle.dump(v, fd)
+    df = pd.DataFrame(zones)
+    df.to_csv(os.path.join(exp_dir, "results", "zones.csv"), index=True)
     for k, v in output_dict.items():
         if hasattr(v, 'shape'):
             if len(v.shape) < 3:

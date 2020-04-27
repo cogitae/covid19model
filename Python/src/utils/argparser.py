@@ -63,6 +63,22 @@ def parse_args():
 	    help="Number of days to consider before epidemic start date.")
 
 
+    parser.add_argument("--chains", type=int, 
+        default=4,
+	    help="Number of chains for STAN fit method.")
+
+    parser.add_argument("--njobs", type=int, 
+        default=-1,
+	    help="Number of jobs for STAN fit method.")
+
+    parser.add_argument("--iter", type=int, 
+        default=4000,
+	    help="Number of iteration for STAN fit method.")
+
+    parser.add_argument("--warmup", type=int, 
+        default=2000,
+	    help="Warmup for STAN fit method.")
+
 
     parser.add_argument("--only-dump-input", action="store_true")
     

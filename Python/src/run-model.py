@@ -63,27 +63,30 @@ def main(args):
     log.info("Load model {}".format(args.stanmodel))
     sm = pystan.StanModel(file="stan-models/{}.stan".format(args.stanmodel))
 
-    if 'regions' in stan_data:
-        del stan_data['regions']
+    zones = stan_data['regions']
+    # del from stan_data because model doesn't like text
+    del stan_data['regions']
     
 
     if args.full:
         log.info("Run model {} with data".format(args.stanmodel))
-        fit = sm.sampling(data=stan_data,iter=40000,warmup=2000,chains=4,
-            control = {"adapt_delta": 0.95, "max_treedepth": 10}
+        fit = sm.sampling(data=stan_data,iter=args.iter,warmup=args.warmup,chains=args.chains,
+            control = {"adapt_delta": 0.95, "max_treedepth": 10},
+            n_jobs=args.njobs, 
         )
     else:
-        log.info("Run model {} with data".format(args.stanmodel))
-        fit = sm.sampling(data=stan_data, iter=40, warmup=20, chains=2,
-            control = {"adapt_delta": 0.95, "max_treedepth": 10}
+        log.info("DEBUG MODE : Run model {} with data limiting to 40 iters".format(args.stanmodel))
+        fit = sm.sampling(data=stan_data, iter=40, warmup=20, chains=args.chains,
+            control = {"adapt_delta": 0.95, "max_treedepth": 10},
+            n_jobs=args.njobs, 
         )
 
-    with open(os.path.join(exp_dir, "output", "fit.pkl"), "wb") as fd:
-        pickle.dump(fit, fd)
+    with open(os.path.join(exp_dir, "output", "model.pkl"), "wb") as fd:
+        pickle.dump((sm, fit), fd)
 
     output_dict = fit.extract()
 
-    postprocess(args, exp_dir, output_dict)
+    postprocess(args, exp_dir, output_dict, zones)
 
 if __name__ == "__main__":
     args = parse_args()
