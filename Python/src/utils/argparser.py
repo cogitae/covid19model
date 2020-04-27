@@ -88,5 +88,9 @@ def parse_args():
 
     parser.add_argument("--only-dump-input", action="store_true")
     
+    parser.add_argument("--force-accept-unfresh-data", action="store_true")
+
+    parser.add_argument("--accept-negative-data", action="store_true")
+    
 
     return parser.parse_args()

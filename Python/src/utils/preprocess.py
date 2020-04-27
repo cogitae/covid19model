@@ -3,6 +3,7 @@ import os
 import sys
 import numpy as np
 import pandas as pd
+from datetime import date, timedelta
 
 log = logging.getLogger('run-model')
 
@@ -16,14 +17,24 @@ class Preprocessor(object):
 
         # concatenate all inputfiles
         try:
-            df = pd.concat([pd.read_csv(input_file) for input_file in self.args.input_files])
+            dfs = [pd.read_csv(input_file) for input_file in self.args.input_files]
         except FileNotFoundError as e:
             #log.exception('Input file missing. Have you run run-france.sh ?', e)
             log.error('Input file missing. Have you run run-france.sh ?')
             sys.exit(-1)
+        
+        for idx, df in enumerate(dfs):
+            df['dateRep'] = pd.to_datetime(df['dateRep'], format="%d/%m/%Y")
+            if df['dateRep'].max() < date.today() - timedelta(1):
+                log.error("Data for {} are not fresh ({}) => run-france.sh".format(
+                    self.args.input_files[idx], df['dateRep'].max()
+                ))
+                if not self.args.force_accept_unfresh_data:
+                    sys.exit(-2)
+
+        df = pd.concat(dfs)
         log.info("{} rows in data".format(len(df)))
         df.loc[df['countriesAndTerritories'] == "United_Kingdom", 'countriesAndTerritories'] = "United Kingdom"
-        df['dateRep'] = pd.to_datetime(df['dateRep'], format="%d/%m/%Y")
 
         if self.args.maxdate: #  filter by max date
             len_before = len(df)

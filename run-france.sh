@@ -46,6 +46,8 @@ python data/extract_opencovidfr_2_ICL.py ${datadir}/opencovid19-fr-chiffres-cles
 # Update data
 # Update Europe wide data from ECDC and process to RDS
 echo "RUN data/fetch-ecdc.py"
+# force update ...
+rm "data/COVID-19-up-to-date.csv"
 python Python/src/fetch-ecdc.py \
     --local-file "data/COVID-19-up-to-date.csv" \
     --dest-file "data/COVID-19-up-to-date_formated.csv"

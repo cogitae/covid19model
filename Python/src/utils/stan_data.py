@@ -152,9 +152,15 @@ def compute_stan_data(
         for i in range(1, args.N2):
             s[i] = s[i - 1] * (1 - h[i - 1])
 
-        # checkl some consistency
-        assert(sum(cases["deaths"] < 0) == 0)
-        assert(sum(cases["cases"] < 0) == 0)
+        # check some consistency
+        if sum(cases["deaths"] < 0) != 0:
+            log.error('Negative deaths data in dataset. You may accept with --accept-negative-data')
+            if not args.accept_negative_data:
+                sys.exit(-3)
+        if sum(cases["cases"] < 0) != 0:
+            log.error('Negative deaths data in dataset. You may accept with --accept-negative-data')
+            if not args.accept_negative_data:
+                sys.exit(-3)
         # slot in these values
         stan_data["N"].append(N)
         stan_data["f"][:, country_num] = h * s
@@ -182,7 +188,11 @@ def compute_stan_data(
                     idxmax,
                     np.where(df_test < 0)
                 ))
-                assert(df_test.sum() == 0)
+                if df_test.sum() != 0:
+                    log.error('Negative data in dataset. You may accept with --accept-negative-data')
+                    if not args.accept_negative_data:
+                        sys.exit(-3)
+                    
 
         check_range(stan_data["deaths"][:, country_num], epidemicStart - 1,N-1)
         check_range(stan_data["cases"][:, country_num], epidemicStart - 1,N-1)
