@@ -1,7 +1,8 @@
-import pandas as pd
-import numpy as np
-import os
 import logging
+import os
+import sys
+import numpy as np
+import pandas as pd
 
 log = logging.getLogger('run-model')
 
@@ -14,7 +15,12 @@ class Preprocessor(object):
         all_zones = set(zones.keys()).union(set(zones.values()))
 
         # concatenate all inputfiles
-        df = pd.concat([pd.read_csv(input_file) for input_file in self.args.input_files])
+        try:
+            df = pd.concat([pd.read_csv(input_file) for input_file in self.args.input_files])
+        except FileNotFoundError as e:
+            #log.exception('Input file missing. Have you run run-france.sh ?', e)
+            log.error('Input file missing. Have you run run-france.sh ?')
+            sys.exit(-1)
         log.info("{} rows in data".format(len(df)))
         df.loc[df['countriesAndTerritories'] == "United_Kingdom", 'countriesAndTerritories'] = "United Kingdom"
         df['dateRep'] = pd.to_datetime(df['dateRep'], format="%d/%m/%Y")

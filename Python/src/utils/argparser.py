@@ -29,7 +29,7 @@ def parse_args():
     parser.add_argument("--stanmodel", type=str, default="base",
 	    help="Model to use.")
 
-    root_dir = os.path.join(os.path.dirname(__file__), '..', '..', '..')
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 
     parser.add_argument("--root-dir", type=Path,
         default=root_dir,
