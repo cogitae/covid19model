@@ -57,6 +57,6 @@ python Python/src/fetch-ecdc.py \
     --dest-file "data/all-france_formated.csv"
 
 echo "RUN Python/src/run-model.py"
-python Python/src/run-model.py --stanmodel base --full 
+python Python/src/run-model.py --stanmodel base --full --accept-negative-data
 #> results/stdout.txt 2> results/stderr.txt 
 #python Python/src/run-model.py --stanmodel base --full --only-dump-input 
