@@ -83,7 +83,7 @@ def parse_args():
 	    help="Warmup for STAN fit method.")
 
     parser.add_argument("--seed", type=int, 
-        default=random.randint(0, sys.maxsize),
+        default=random.randint(0, 2147483647),
 	    help="Seed for STAN fit method.")
 
     parser.add_argument("--only-dump-input", action="store_true")
